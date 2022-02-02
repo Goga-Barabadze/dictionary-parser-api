@@ -1,14 +1,45 @@
 import re
 
 from src.logic.dictionary import *
+from src.model.Gender import Gender
 from src.model.Model import *
+from src.model.Language import Language
+
+
+def parse_translations(text):
+    if type(text) != str:
+        raise TypeError("Input must be a string.")
+
+    translation_tables = re.findall(r"(?<={{translations}}\n)[\s\S]*?(?=}}(?:\Z)|\n\n)", text)
+
+    if len(translation_tables) != 1:
+        return []
+
+    translation_table = translation_tables[0]
+
+    # TODO: This method doesn't work with transliterations: *{{ru}}: [1] {{Üt|ru|девятнадцатый|djewjatnadzatyj}}
+    translations = re.findall(r"{{(?:translation-redirect|translation)[\S ]*?}}", translation_table)
+
+    final_translations: [(str, str)] = []
+
+    for translation in translations:
+        result = re.findall(r"(?<=\|)[^\n\|}=0-9]+(?=\||}})", translation)
+        if len(result) == 1:
+            # We are checking this because sometimes there is no translation but only a language code
+            # Don't want that here
+            if not Language.does_language_code_exist(result[0]):
+                final_translations.append(("", result[0]))
+        elif len(result) == 2:
+            final_translations.append((result[0], result[1]))
+
+    return final_translations
 
 
 def parse_definitions(text):
     def _cleanse_definition(_text):
         regular_expressions = [
             (r":\[([0-9]*?)\]", r"\1."),
-            (r"::", r"")
+            (r":\n", r"")
         ]
 
         for regular_expression, replace_text in regular_expressions:
@@ -27,6 +58,7 @@ def parse_definitions(text):
         _text[0] = _text[0][1:]
 
         # "1a. Hi\n1b. Hello" -> ["1a. Hi", "1b. Hello"]
+        # TODO: Fix this
         for _definition in _text:
             _definition = _definition.split("\n")
 
@@ -55,7 +87,7 @@ def parse_gender(text):
     if type(text) != str:
         raise TypeError("Input must be string.")
 
-    gender = re.findall(r"(?<={{)[\S]{1,2}(?=}})", text)
+    gender = re.findall(r"(?<={{)[\S]{1,2}(?=}}[^:,\n;])", text)
 
     if len(gender) != 1:
         return Gender.not_applicable
@@ -114,7 +146,6 @@ def parse_derivation_table(text):
             continue
 
         # TODO: Make this more general, add elegant way for all languages
-        # TODO: This is still not working. Still Hilfsverb in the dictionary
         if name[0] == "Genus" or "Hilfsverb" in name[0]:
             continue
 
@@ -175,11 +206,11 @@ def parse_section(text):
     grammatical_features = parse_generic_word_forms(text, "grammatical-features")
     gender = parse_gender(text)
     definitions = parse_definitions(text)
+    translations = parse_translations(text)
 
     # TODO: Pronomina-Tabelle
     # TODO: Add support for "Flexion:" -> https://de.wiktionary.org/wiki/Hilfe:Flexionsseiten
-    # TODO: Translate languages (eg "Deutsch" -> "german")
-    # TODO: Übersetzungen
+    # TODO: Aussprache
 
     return Word(
         part_of_speech,
@@ -192,7 +223,8 @@ def parse_section(text):
         male_word_forms,
         secondary_forms,
         outdated_forms,
-        grammatical_features
+        grammatical_features,
+        translations
     )
 
 
@@ -225,8 +257,9 @@ def parse_document(content):
     pages.clear()
     parsed_pages.clear()
 
-    # have -> komisch formatierte definitionen
-    # &quot;
-    # 1 -> gives back all the singular 1s and plural 1s from deriv table
+    # have  -> komisch formatierte definitionen
+    # 1     -> gives back all the singular 1s and plural 1s from deriv table
+    # list, Eimer, Tschechisch, liste (Deklinierte Form) ->
+    #       UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc3 in position 1023: unexpected end of data
 
     look_up("seine have", dictionary)

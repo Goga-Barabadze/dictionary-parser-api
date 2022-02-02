@@ -45,7 +45,7 @@ def add_references(dictionary, _pages):
                 smart_access_dict([_word_form, "redirects", _page.title], dictionary)
 
             # 2. Pointing to another page because this is derived form. Point away
-            # grammar_forms, root_words
+            # grammar_forms, root_words, translations
             for _word_form in _word.word_forms_which_point_away():
                 if _word_form == _page.title or _word_form not in dictionary:
                     continue

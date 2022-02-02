@@ -1,13 +1,14 @@
 import pytest
 
 from src.logic.parse import *
+from src.model.Gender import Gender
 
 
 @pytest.mark.parametrize("test_input, expected", [
-    ("{{mf}}\n", Gender.masculine_and_feminine),
-    ("\n{{m}}", Gender.masculine),
-    ("{{f}}", Gender.feminine),
-    ("{{n}}", Gender.neuter),
+    ("{{mf}} ===\n", Gender.masculine_and_feminine),
+    ("\n{{m}} ===", Gender.masculine),
+    ("{{f}} ===", Gender.feminine),
+    ("{{n}} ===", Gender.neuter),
     ("\n=== {{part-of-speech|noun|german}}, {{n}} ===\n\n", Gender.neuter),
     ("=== {{part-of-speech|noun|latin}}, {{m}} ===", Gender.masculine),
     ("=== {{part-of-speech|verb|english}} ===", Gender.not_applicable)
@@ -110,6 +111,14 @@ def test_parse_section():
 
 {{male-word-form}}
 :[1] [[Schrotthändler]]
+
+{{translations}}
+{{Ü-Tabelle|Ü-links=
+*{{de}}: [1] {{translation|de|Schülerin}} {{f}}
+|Ü-rechts=
+}}
+
+
     """
 
     output = parse_section(test_input)
@@ -123,7 +132,7 @@ def test_parse_section():
                         "Akkusativ Singular": "Hallo",
                         "Akkusativ Plural": "Hallos"
                     }, ["wegredend"], ["Emmentalerin"], ["Schrotthändler"],
-                    ["unliniert"], ["Schrotschuß"], ["wegredend"])
+                    ["unliniert"], ["Schrotschuß"], ["wegredend"], [("de", "Schülerin")])
 
     assert output.root_words == expected.root_words
     assert output.outdated_forms == expected.outdated_forms
@@ -135,6 +144,7 @@ def test_parse_section():
     assert output.grammar_forms == expected.grammar_forms
     assert output.part_of_speech == expected.part_of_speech
     assert output.derivatives == expected.derivatives
+    assert output.translations == expected.translations
 
     for def1, def2 in zip(output.definitions, expected.definitions):
         assert def1.description == def2.description
@@ -186,6 +196,30 @@ def test_parse_definitions():
 def test_parse_definitions_type(test_input):
     with pytest.raises(TypeError):
         parse_definitions(test_input)
+
+
+def test_parse_definitions_give_me_a_name():
+    test_input = """
+{{definitions}}
+:''transitiv:''
+::[1] [[haben]]; [[besitzen]]; zur Verfügung haben
+::[2] [[erfahren]], [[erleben]]
+::[3] (eine Sprache, ein Fach) kennen, können
+
+        """
+
+    expected_definitions = [
+        Definition("''transitiv:''"),
+        Definition("1. [[haben]]; [[besitzen]]; zur Verfügung haben"),
+        Definition("2. [[erfahren]], [[erleben]]"),
+        Definition("3. (eine Sprache, ein Fach) kennen, können")
+    ]
+
+    output_definitions = parse_definitions(test_input)
+
+    for def1, def2 in zip(output_definitions, expected_definitions):
+        print(def1, def2)
+        #assert def1.description == def2.description
 
 
 def test_parse_derivation_table_noun():
@@ -316,3 +350,18 @@ def test_parse_derivation_table_adverb():
 def test_parse_derivation_table_type(test_input):
     with pytest.raises(TypeError):
         parse_derivation_table(test_input)
+
+
+@pytest.mark.parametrize("test_input, expected", [
+    ("{{translations}}\n{{Ü-Tabelle|Ü-links=\n*{{de}}: [1] {{translation|de|Schülerin}} {{f}}\n|Ü-rechts=\n}}",
+        [("de", "Schülerin")]),
+    ("{{translations}}\n{{Ü-Tabelle|Ü-links=\n*{{de}}: "
+     "[1] {{translation|de|anhäufen}}\n|Ü-rechts=\n*{{it}}: [1] {{translation|it|ammassare}}\n}}",
+        [("de", "anhäufen"), ("it", "ammassare")]),
+    ("{{translations}}\n{{Ü-Tabelle|Ü-links=\n:{{translation-redirect|2|Frau|}} {{f}}"
+     ":{{translation-redirect|3|gnädige Frau|}} {{f}}, {{translation-redirect||Madame|}} {{f}}"
+     ":{{translation-redirect|4|Dame|1}} {{f}}\n:{{translation-redirect|5|Hausherrin|}} {{f}}\n|Ü-rechts=\n}}",
+        [("", "Frau"), ("", "gnädige Frau"), ("", "Madame"), ("", "Dame"), ("", "Hausherrin")]),
+])
+def test_parse_translations(test_input, expected):
+    assert parse_translations(test_input) == expected
