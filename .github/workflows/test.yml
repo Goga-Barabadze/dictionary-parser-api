@@ -12,6 +12,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: GitHub Action for pytest
+        uses: cclauss/GitHub-Action-for-pytest@0.5.0
 
       - name: Run a multi-line script
-        run: PYTHONPATH=. pytest # The 'PYTHONPATH=.' avoids an error: https://stackoverflow.com/questions/54895002/modulenotfounderror-with-pytest
+        run: PYTHONPATH=. pytest -h # The 'PYTHONPATH=.' avoids an error: https://stackoverflow.com/questions/54895002/modulenotfounderror-with-pytest
