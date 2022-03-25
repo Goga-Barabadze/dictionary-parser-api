@@ -120,7 +120,7 @@ def parse_derivation_table(text):
     if type(text) != str:
         raise TypeError("Input must be string.")
 
-    text = re.search(r"(?<={{)[\S]*? (verb|noun|adjective|adverb) overview\n[\s\S]*?(?=}})", text)
+    text = re.search(r"(?<={{)[\S\s]+?(verb|noun|adjective|adverb|pronoun) overview\n[\s\S]*?(?=}})", text)
 
     if text is None:
         return {}
@@ -147,6 +147,9 @@ def parse_derivation_table(text):
 
         # TODO: Make this more general, add elegant way for all languages
         if name[0] == "Genus" or "Hilfsverb" in name[0]:
+            continue
+
+        if len(re.findall(r"[0-9]+?", word[0])) > 0:
             continue
 
         dictionary[name[0]] = word[0]
@@ -211,6 +214,7 @@ def parse_section(text):
     # TODO: Pronomina-Tabelle
     # TODO: Add support for "Flexion:" -> https://de.wiktionary.org/wiki/Hilfe:Flexionsseiten
     # TODO: Aussprache
+    # TODO: {{Verkleinerungsformen}} -> Schatzi
 
     return Word(
         part_of_speech,
@@ -259,7 +263,13 @@ def parse_document(content):
 
     # have  -> komisch formatierte definitionen
     # 1     -> gives back all the singular 1s and plural 1s from deriv table
-    # list, Eimer, Tschechisch, liste (Deklinierte Form) ->
-    #       UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc3 in position 1023: unexpected end of data
+    # familia -> grammatical features isn't always full of things we want to point to (Genitiv)
+    # Boßel -> Showing Bild for whatever reason
 
-    look_up("seine have", dictionary)
+    # for index in range(1,1000):
+        # entry = list(dictionary.items())[random.randint(0, len(dictionary))]
+        # print("\n" * 10)
+
+    look_up("Boßel have", dictionary)
+
+    return dictionary

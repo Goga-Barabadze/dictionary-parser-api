@@ -258,6 +258,32 @@ def test_parse_derivation_table_noun():
     assert parse_derivation_table(test_input) == derivation_table
 
 
+def test_parse_derivation_table_pronoun():
+    test_input = """
+=== {{part-of-speech|noun|german}}, {{n}} ===
+
+{{pronoun overview
+|Nominativ Singular m=ein
+|Nominativ Singular f=eine
+|Nominativ Singular n=ein
+|Nominativ Plural=—
+}}
+
+{{definitions}}
+:[1] lautes Rufen; fröhliches, lautes Durcheinander
+
+{{Ähnlichkeiten 1|[[Hall]], [[halle]], [[Halle]], [[Halo]], [[Holle]]|Anagramme=[[holla]]}}
+    """
+
+    derivation_table = {
+        "Nominativ Singular m": "ein",
+        "Nominativ Singular f": "eine",
+        "Nominativ Singular n": "ein"
+    }
+
+    assert parse_derivation_table(test_input) == derivation_table
+
+
 def test_parse_derivation_table_verb():
     test_input = """
 === {{part-of-speech|verb|german}}, {{n}} ===

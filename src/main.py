@@ -3,6 +3,7 @@ from shutil import copyfile
 
 from src.logic.parse import parse_document
 from src.logic.declutter import declutter_with_regex_instructions, declutter_universally_redundant_parts
+from src.logic.IndexGenerator import IndexGenerator
 
 import re
 import os
@@ -16,7 +17,7 @@ def main():
 
     for current_filepath in input_file_paths:
 
-        if current_filepath == ".DS_Store":
+        if not current_filepath.endswith(".xml"):
             continue
 
         output_dict_path, input_file_path = _filepaths(cwd, current_filepath)
@@ -47,7 +48,11 @@ def main():
                 _save_changes(dict_file, dict_file_content)
 
                 if "parse" in sys.argv:
-                    parse_document(dict_file_content)
+                    dictionary = parse_document(dict_file_content)
+
+                if "generate-index" in sys.argv:
+                    ig = IndexGenerator(dictionary, filename_without_extension)
+                    ig.generate()
 
         _print_size_difference(input_file_path, output_dict_path)
 
@@ -102,6 +107,6 @@ def _translate_keywords_to_english(content, current_working_directory):
 
     return temp
 
-
+# TODO: Install eslint
 if __name__ == "__main__":
     main()
