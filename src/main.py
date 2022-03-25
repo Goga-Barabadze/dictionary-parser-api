@@ -1,14 +1,13 @@
+import csv
+import os
+import re
+import sys
 from pathlib import Path
 from shutil import copyfile
 
-from src.logic.parse import parse_document
-from src.logic.declutter import declutter_with_regex_instructions, declutter_universally_redundant_parts
 from src.logic.IndexGenerator import IndexGenerator
-
-import re
-import os
-import csv
-import sys
+from src.logic.declutter import declutter_with_regex_instructions, declutter_universally_redundant_parts
+from src.logic.parse import parse_document
 
 
 def main():

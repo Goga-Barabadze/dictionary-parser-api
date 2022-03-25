@@ -5,16 +5,30 @@ on:
   pull_request:
 
   workflow_dispatch:
-
+# TODO: Install pylint
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      
-      - name: GitHub Action for pytest
-        uses: cclauss/GitHub-Action-for-pytest@0.5.0
 
-      - name: Run a multi-line script
-        run: PYTHONPATH=. pytest -h # The 'PYTHONPATH=.' avoids an error: https://stackoverflow.com/questions/54895002/modulenotfounderror-with-pytest
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip3.8
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: PYTHONPATH=. pytest # The 'PYTHONPATH=.' avoids an error: https://stackoverflow.com/questions/54895002/modulenotfounderror-with-pytest

@@ -2,8 +2,8 @@ import re
 
 from src.logic.dictionary import *
 from src.model.Gender import Gender
-from src.model.Model import *
 from src.model.Language import Language
+from src.model.Model import *
 
 
 def parse_translations(text):
