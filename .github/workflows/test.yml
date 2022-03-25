@@ -1,0 +1,17 @@
+name: unit tests
+
+on:
+  push:
+  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run a multi-line script
+        run: PYTHONPATH=. pytest # The 'PYTHONPATH=.' avoids an error: https://stackoverflow.com/questions/54895002/modulenotfounderror-with-pytest
