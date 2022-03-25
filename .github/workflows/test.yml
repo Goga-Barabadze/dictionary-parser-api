@@ -18,12 +18,13 @@ jobs:
         with:
           python-version: 3.8
 
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip3.8
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+# TODO: Does the caching really make it so fast?
+      #- uses: actions/cache@v3
+       # with:
+        #  path: ~/.cache/pip3.8
+         # key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          #restore-keys: |
+           # ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
