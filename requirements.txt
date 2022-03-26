@@ -1,1 +1,2 @@
 pytest
+python-box[all]~=6.0

@@ -1,0 +1,11 @@
+languages:
+  supported:
+    - de
+
+links:
+  wiktionary:
+    base_url: "https://dumps.wikimedia.org/"
+    dumps:    "https://dumps.wikimedia.org/backup-index.html"
+
+paths:
+  downloadsFolder: "downloads/"
