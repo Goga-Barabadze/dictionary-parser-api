@@ -4,7 +4,6 @@ on:
   schedule:
     - 00 22 * * * # Every day at 10 PM
   workflow_dispatch:
-  push:
 
 jobs:
   download_dumps:
