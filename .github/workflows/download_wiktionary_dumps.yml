@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  download_dumps:
+  build:
     runs-on: ubuntu-latest
 
     steps:
