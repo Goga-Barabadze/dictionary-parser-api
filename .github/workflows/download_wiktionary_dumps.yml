@@ -33,9 +33,9 @@ jobs:
           git config user.email "<>"
 
       - name: Commit Changes
+        # Add all files which are smaller than 100 MB. This is used as a cache
+        # If the file is larger it needs to be redownloaded next time for parse and cannot be cached on GitHub for it's too large
         run: |
-      # Add all files which are smaller than 100 MB. This is used as a cache
-      # If the file is larger it needs to be redownloaded next time for parse and cannot be cached on GitHub for its too large
           find * -size -100M -type f -print | xargs git add
           git commit -m "chore: downloaded dumps"
           git push origin main
