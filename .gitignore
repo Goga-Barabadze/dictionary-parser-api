@@ -1,4 +1,4 @@
 *.xml
-!./wiktionary_dumps/
+!/wiktionary_dumps/*
 *.zip
 *.bz2
