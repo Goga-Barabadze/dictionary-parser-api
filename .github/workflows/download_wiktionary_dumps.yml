@@ -3,6 +3,7 @@ name: Download Wiktionary Dump Files
 on:
   schedule:
     - 00 22 * * * # Every day at 10 PM
+  push:
   workflow_dispatch:
 
 jobs:
