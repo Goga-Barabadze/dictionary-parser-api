@@ -1,13 +1,13 @@
-name: unit tests
+name: Download Wiktionary Dump Files
 
 on:
-  push:
-  pull_request:
-
+  schedule:
+    - 00 22 * * * # Every day at 10 PM
   workflow_dispatch:
-# TODO: Install pylint
+  push:
+
 jobs:
-  build:
+  download_dumps:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +23,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: PYTHONPATH=. pytest # The 'PYTHONPATH=.' avoids an error: https://stackoverflow.com/questions/54895002/modulenotfounderror-with-pytest
+      - name: Download dumps
+        run: python3.8 src/wiktionary_dumps/download_wiktionary_dumps.py

@@ -1,2 +1,5 @@
 pytest
 python-box[all]~=6.0
+requests
+bs4
+tqdm

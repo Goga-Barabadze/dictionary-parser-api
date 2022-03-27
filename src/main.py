@@ -1,3 +1,6 @@
+"""
+Main file of the program
+"""
 import csv
 import os
 import re
@@ -5,9 +8,9 @@ import sys
 from pathlib import Path
 from shutil import copyfile
 
-from src.logic.IndexGenerator import IndexGenerator
-from src.logic.declutter import declutter_with_regex_instructions, declutter_universally_redundant_parts
-from src.logic.parse import parse_document
+from logic.IndexGenerator import IndexGenerator
+from logic.declutter import declutter_with_regex_instructions, declutter_universally_redundant_parts
+from logic.parse import parse_document
 
 
 def main():
@@ -87,7 +90,6 @@ def _print_size_difference(file_now, file_before):
 
 
 def _translate_keywords_to_english(content, current_working_directory):
-
     temp = content
 
     with open(current_working_directory + "/keywords.csv", mode="r") as keywords_file:
@@ -99,13 +101,13 @@ def _translate_keywords_to_english(content, current_working_directory):
             column_range = range(1, len(columns))
 
             for column_index in column_range:
-
                 # TODO: Only go to column for this language
                 print(columns[column_index])
                 temp = re.sub(columns[column_index], columns[0], temp)
 
     return temp
 
-# TODO: Install eslint
+
+# TODO: Upgrade python version
 if __name__ == "__main__":
     main()

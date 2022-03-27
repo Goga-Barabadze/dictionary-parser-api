@@ -5,7 +5,6 @@ from src.model.Gender import Gender
 from src.model.Language import Language
 from src.model.Model import *
 
-
 def parse_translations(text):
     if type(text) != str:
         raise TypeError("Input must be a string.")
@@ -17,7 +16,8 @@ def parse_translations(text):
 
     translation_table = translation_tables[0]
 
-    # TODO: This method doesn't work with transliterations: *{{ru}}: [1] {{Üt|ru|девятнадцатый|djewjatnadzatyj}}
+    # TODO: This method doesn't work with transliterations:
+    #  *{{ru}}: [1] {{Üt|ru|девятнадцатый|djewjatnadzatyj}}
     translations = re.findall(r"{{(?:translation-redirect|translation)[\S ]*?}}", translation_table)
 
     final_translations: [(str, str)] = []
@@ -25,7 +25,8 @@ def parse_translations(text):
     for translation in translations:
         result = re.findall(r"(?<=\|)[^\n\|}=0-9]+(?=\||}})", translation)
         if len(result) == 1:
-            # We are checking this because sometimes there is no translation but only a language code
+            # We are checking this because
+            # sometimes there is no translation but only a language code
             # Don't want that here
             if not Language.does_language_code_exist(result[0]):
                 final_translations.append(("", result[0]))

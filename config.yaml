@@ -1,11 +1,17 @@
 languages:
   supported:
+    - am
+    - ka
+    - ab
+    - fr
+    - tl
+    - ta
+    - en
     - de
-
 links:
   wiktionary:
-    base_url: "https://dumps.wikimedia.org/"
-    dumps:    "https://dumps.wikimedia.org/backup-index.html"
+    base_url: 'https://dumps.wikimedia.org/'
+    dumps:    'https://dumps.wikimedia.org/backup-index.html'
 
 paths:
-  downloadsFolder: "downloads/"
+  downloadsFolder: "wiktionary_dumps/"
