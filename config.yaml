@@ -2,9 +2,6 @@ languages:
   supported:
     - am
     - ka
-    - fr
-    - de
-    - en
     - ru
 links:
   wiktionary:
