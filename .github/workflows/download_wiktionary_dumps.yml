@@ -25,6 +25,8 @@ jobs:
       - name: Download Dumps
         run: python3.8 src/wiktionary_dumps/download_wiktionary_dumps.py
 
+      # For the future: Parse them directly as to overcome the github push limits in the normal as well as in the large file system
+
       - name: Setup Git Config
         run: |
           git config user.name "GitHub Wiktionary Dumps Bot"
@@ -33,5 +35,6 @@ jobs:
       - name: Commit Changes
         run: |
           git lfs track "src/wiktionary_dumps/**"
+          git add .
           git commit -m "chore: downloaded dumps"
           git push origin main
