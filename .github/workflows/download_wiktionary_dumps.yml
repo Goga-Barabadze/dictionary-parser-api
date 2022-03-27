@@ -24,3 +24,16 @@ jobs:
 
       - name: Download dumps
         run: python3.8 src/wiktionary_dumps/download_wiktionary_dumps.py
+
+      - name: Setup Git Config
+        run: |
+          # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
+          git config user.name "GitHub Wiktionary Dumps Bot"
+          git config user.email "<>"
+
+      - name: Commit changes
+        run: |
+          # Stage the file, commit and push
+          git add .
+          git commit -m "chore: downloaded dumps"
+          git push origin main

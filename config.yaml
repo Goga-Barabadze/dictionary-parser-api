@@ -1,7 +1,11 @@
 languages:
   supported:
+    - am
     - ka
+    - fr
+    - de
     - en
+    - ru
 links:
   wiktionary:
     base_url: 'https://dumps.wikimedia.org/'
