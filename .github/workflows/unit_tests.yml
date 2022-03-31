@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build: # TODO: Is this the right naming?
+  test:
     runs-on: ubuntu-latest
 
     steps:

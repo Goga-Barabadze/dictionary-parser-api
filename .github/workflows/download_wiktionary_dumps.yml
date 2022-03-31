@@ -29,13 +29,16 @@ jobs:
 
       - name: Setup Git Config
         run: |
-          git config user.name "GitHub Wiktionary Dumps Bot"
+          git config user.name "Dumps Bot"
           git config user.email "<>"
 
       - name: Commit Changes
-        # Add all files which are smaller than 100 MB. This is used as a cache
-        # If the file is larger it needs to be redownloaded next time for parse and cannot be cached on GitHub for it's too large
+        # - Add all files which are smaller than 2 GB. This is used as a cache
+        # -- Use normal git for files smaller than 100 MB
+        # -- Otherwise, use git lfs
+        # - If the file is larger than that it needs to be redownloaded next time for parse and cannot be cached on GitHub for it's too large
         run: |
-          find * -size -100M -type f -print | xargs git add
+          find . -size +100M -size -2G | xargs git lfs track
+          find * -size -2G -type f -print | xargs git add
           git commit -m "chore: downloaded dumps"
           git push origin main

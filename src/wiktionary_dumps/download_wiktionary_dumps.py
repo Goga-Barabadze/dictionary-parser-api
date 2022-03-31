@@ -42,8 +42,10 @@ def _download_dump_and_decompress(link, version_control):
 
     filename = link.split('/')[-1]
     dest = config.paths.downloadsFolder
+    new_file_name = dest + filename.replace(".bz2", "")
 
-    if version_control and os.path.exists(filename) and _date_from_filename(dest + filename) >= _date_from_filename(link):
+    # TODO: This only checks if bz2 already exists but we delete them and only store xml
+    if version_control and os.path.exists(new_file_name) and _date_from_filename(new_file_name) >= _date_from_filename(link):
         logging.info('Skipping over %s since we don\'t need this version.', link)
         return
 
@@ -151,4 +153,4 @@ def _download_links(links, version_control):
 
 
 if __name__ == "__main__":
-    download_dump_files(version_control=False)
+    download_dump_files()
