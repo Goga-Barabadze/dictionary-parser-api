@@ -38,7 +38,7 @@ jobs:
         # -- Otherwise, use git lfs
         # - If the file is larger than that it needs to be redownloaded next time for parse and cannot be cached on GitHub for it's too large
         run: |
-          find . -size +100M -size -2G | xargs git lfs track
+          find * -size +100M -size -2G | xargs git lfs track
           find * -size -2G -type f -print | xargs git add
           git commit -m "chore: downloaded dumps"
           git push origin main
