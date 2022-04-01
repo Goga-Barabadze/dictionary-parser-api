@@ -30,7 +30,7 @@ WIKTIONARY_FILE_SUFFIX = '-pages-articles-multistream.xml.bz2'
 thread_local = threading.local()
 
 logging.basicConfig(format='%(asctime)s %(levelname)s %(thread)d %(lineno)d \t %(message)s')
-logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.NOTSET)
 
 config = Box.from_yaml(filename='config.yaml')
 
@@ -143,6 +143,10 @@ def download_dump_files(version_control=True):
                         logging.info("Link for language %s: %s", lang, download_link_for_dump)
 
                         links.append(download_link_for_dump)
+
+    if len(links) == 0 and len(config.languages.supported) > 0:
+        logging.debug("No links found. Wikipedia might be dumping right now. Try again later.")
+        return
 
     _download_links(list(dict.fromkeys(links)), version_control)
 

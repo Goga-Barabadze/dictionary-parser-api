@@ -1,7 +1,5 @@
 languages:
   supported:
-    - en
-    - de
     - am
 
 links:
