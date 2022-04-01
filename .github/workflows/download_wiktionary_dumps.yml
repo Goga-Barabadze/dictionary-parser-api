@@ -45,5 +45,5 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git commit -m "chore: downloaded dumps" --quiet
-          git push origin main --quiet
+          git commit -m "chore: download dumps" --allow-empty
+          git push origin main
