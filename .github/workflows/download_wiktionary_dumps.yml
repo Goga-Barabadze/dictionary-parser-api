@@ -2,7 +2,7 @@ name: Download Wiktionary Dump Files
 
 on:
   schedule:
-    - cron: "00 22 * * *" # Every day at 10 PM
+    - cron: "00 22 * * *" # Every day at the same time
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
       - name: Download Dumps
         run: python3.8 src/wiktionary_dumps/download_wiktionary_dumps.py
 
-      # For the future: Parse them directly as to overcome the github push limits in the normal as well as in the large file system
+        # For the future: Parse them directly as to overcome the github push limits in the normal as well as in the large file system
 
       - name: Setup Git Config
         run: |
@@ -38,7 +38,6 @@ jobs:
         # - If the file is larger than that it needs to be redownloaded next time for parse and cannot be cached on GitHub for it's too large
 
       - name: Git Track Large Files
-        if: find * -size +100M -size -2G > 0
         run: find * -size +100M -size -2G | xargs git lfs track
 
       - name: Git Add
@@ -46,5 +45,5 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git commit -m "chore: downloaded dumps"
+          git commit -m "chore: downloaded dumps" --allow-empty
           git push origin main
