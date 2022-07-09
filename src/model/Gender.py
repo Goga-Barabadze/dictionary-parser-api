@@ -2,8 +2,10 @@ import enum
 
 
 class Gender(enum.Enum):
-    feminine = 0
-    masculine = 1
-    neuter = 2
-    masculine_and_feminine = 3
-    not_applicable = 4
+    NONE = 0
+    FEMININE = 1
+    MASCULINE = 2
+    NEUTER = 3
+    ANIMATE = 4
+    INANIMATE = 5
+    COMMON = 6

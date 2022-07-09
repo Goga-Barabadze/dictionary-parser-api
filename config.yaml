@@ -1,6 +1,31 @@
 languages:
+#  supported:
+#    - am
+#    - ka
+#    - en
+#    - de
+#    - fr
+#    - it
+#    - ru
+#    - am
+#    - ar
+#    - zh
+#    - nl
+#    - eo
+#    - he
+#    - ja
+#    - nn
+#    - pt
+#    - sa
+#    - hi
+#    - es
+#    - sv
+#    - el
   supported:
-    - am
+    - de
+    - fr
+    - ru
+    - it
 
 links:
   wiktionary:
@@ -8,4 +33,4 @@ links:
     dumps:    'https://dumps.wikimedia.org/backup-index.html'
 
 paths:
-  downloadsFolder: "wiktionary_dumps/"
+  dumpsFolder: "dumps/"
