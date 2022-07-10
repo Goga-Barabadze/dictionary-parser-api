@@ -30,6 +30,7 @@ for current_filepath in files:
         file_content_buffer = ""
         word_count = 0
         failure_count = 0
+        redirect_buffer = {}
 
         dump_created_at = run(routine["meta"]["dumped_at"], current_filepath)
 
@@ -69,6 +70,11 @@ for current_filepath in files:
             page_title = run(routine["parse"]["page_title"], page[10:290])
             page_id = run(routine["parse"]["page_id"], page[30:500])
             page_redirect = run(routine["parse"]["page_redirect"], page[30:700])
+
+            if page_redirect is not None:
+                redirect_buffer[page_title] = page_redirect
+                continue
+
             page_content = run(routine["parse"]["page_content"], page[50:])
 
             print(page_id + " - " + page_title + " - " + str(word_count))
