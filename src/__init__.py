@@ -14,68 +14,78 @@ from src.model.Word import Word
 
 config = Box.from_yaml(filename='../config.yaml')
 
-root_directory = os.path.dirname(Path(__file__).parent)
-dump_folder_path = root_directory + "/" + config.paths.dumpsFolder
-files = os.listdir(dump_folder_path)
-
 NAMESPACE_LITERAL_FOR_WIKTIONARY_WORD_PAGE = 0
 
-for current_filepath in files:
-    filepath = dump_folder_path + current_filepath
 
-    if not filepath.endswith(".xml"):
-        continue
+def main():
+    root_directory = os.path.dirname(Path(__file__).parent)
+    dump_folder_path = root_directory + "/" + config.paths.dumpsFolder
+    files = os.listdir(dump_folder_path)
 
-    with open(filepath, "r", encoding="utf-8") as file:
-        file_content_buffer = ""
-        word_count = 0
-        failure_count = 0
-        redirect_buffer = {}
+    for current_filepath in files:
+        filepath = dump_folder_path + current_filepath
 
-        dump_created_at = run(routine["meta"]["dumped_at"], current_filepath)
+        if not filepath.endswith(".xml"):
+            continue
 
-        file_content_buffer += file.readline()
-        dump_file_language_code = run(routine["meta"]["language_code"], file_content_buffer)
+        with open(filepath, "r", encoding="utf-8") as file:
+            file_content_buffer = ""
+            word_count = 0
+            failure_count = 0
+            redirect_buffer = {}
 
-        while file.readable():
+            dump_created_at = run(routine["meta"]["dumped_at"], current_filepath)
 
-            if failure_count >= 10000:
-                break
+            file_content_buffer += file.readline()
+            dump_file_language_code = run(routine["meta"]["language_code"], file_content_buffer)
 
-            for _ in range(25):
-                if file.readable():
-                    file_content_buffer += file.readline()
+            while file.readable():
 
-            if len(file_content_buffer) % 50 != 0:
-                file_content_buffer = ""
-                continue
+                if failure_count >= 10000:
+                    break
 
-            try:
-                page, start, end = run(routine["parse"]["page"], file_content_buffer)
-                failure_count = 0
-            except AttributeError:
-                # Didn't succeed to read, let's try again with more lines in the buffer
-                failure_count += 1
-                continue
+                for _ in range(25):
+                    if file.readable():
+                        file_content_buffer += file.readline()
 
-            file_content_buffer = file_content_buffer[end + 1:]
+                if len(file_content_buffer) % 50 != 0:
+                    file_content_buffer = ""
+                    continue
 
-            namespace = run(routine["parse"]["namespace"], page[30:300])
+                try:
+                    page, start, end = run(routine["parse"]["page"], file_content_buffer)
+                    failure_count = 0
+                except AttributeError:
+                    # Didn't succeed to read, let's try again with more lines in the buffer
+                    failure_count += 1
+                    continue
 
-            if namespace != NAMESPACE_LITERAL_FOR_WIKTIONARY_WORD_PAGE:
-                continue
+                file_content_buffer = file_content_buffer[end + 1:]
 
-            word_count += 1
+                namespace = run(routine["parse"]["namespace"], page[30:300])
 
-            page_title = run(routine["parse"]["page_title"], page[10:290])
-            page_id = run(routine["parse"]["page_id"], page[30:500])
-            page_redirect = run(routine["parse"]["page_redirect"], page[30:700])
+                if namespace != NAMESPACE_LITERAL_FOR_WIKTIONARY_WORD_PAGE:
+                    continue
 
-            if page_redirect is not None:
-                redirect_buffer[page_title] = page_redirect
-                continue
+                word_count += 1
 
-            page_content = run(routine["parse"]["page_content"], page[50:])
+                page_title = run(routine["parse"]["page_title"], page[10:290])
+                page_id = run(routine["parse"]["page_id"], page[30:500])
+                page_redirect = run(routine["parse"]["page_redirect"], page[30:700])
 
-            print(page_id + " - " + page_title + " - " + str(word_count))
-            print(page_content)
+                if page_redirect is not None:
+                    redirect_buffer[page_title] = page_redirect
+                    continue
+
+                page_content = run(routine["parse"]["page_content"], page[50:])
+
+                # for section in run(routine["parse"]["sections"], page_content):
+                #     print(section)
+
+                print(page_id + " - " + page_title + " - " + str(word_count))
+                print(page_content)
+                print()
+
+
+if __name__ == "__main__":
+    main()
