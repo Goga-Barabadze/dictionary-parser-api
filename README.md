@@ -13,7 +13,7 @@ thereby enable developers to build cool language-based applications.
 
 
 
-### Please make sure to use this table for every Merge Request you make
+### Please make sure to use this table for every Merge Request you create
 | commit    | message                                                             | 
 |-----------|:--------------------------------------------------------------------|
 | `feat`    | new feature for the user                                            |
