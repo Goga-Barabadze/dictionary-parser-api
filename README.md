@@ -1,4 +1,4 @@
-# parse-wiktionary
+# Parse Wiktionary
 
 Wiktionary.org is a masterpiece of human collaboration. It tries to provide a definition and description of every word from all languages. And they do so under the _Creative Commons Attribution-ShareAlike 3.0 Unported License_ and _GNU Free Documentation License_.
 
