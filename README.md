@@ -11,6 +11,8 @@ The aim of this project is to parse these Wiktionary Dumps and
 thereby enable developers to build cool language-based applications.
 ```
 
+### Downloading the dumps
+You can, of course, go to the official Wikimedia Downloads Portal and download all your needed dumps there. Because the dumps constantly change and it can be tedious to constantly keep them updated manually, you can use the `download_wiktionary.py` script to batch download the newest dumps. Define the languages in the config file and the script will automatically remove old versions and download the new ones.
 
 
 ### Please make sure to use this table for every Merge Request you create
