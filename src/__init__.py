@@ -12,12 +12,13 @@ from src.utils.runners import *
 
 from src.model.Word import Word
 
-config = Box.from_yaml(filename='../config.yaml')
-
+MAX_FAILURES_UNTIL_TERMINATION = 10000
 NAMESPACE_LITERAL_FOR_WIKTIONARY_WORD_PAGE = 0
 
 
 def main():
+    config = Box.from_yaml(filename='../config.yaml')
+
     root_directory = os.path.dirname(Path(__file__).parent)
     dump_folder_path = root_directory + "/" + config.paths.dumpsFolder
     files = os.listdir(dump_folder_path)
@@ -32,7 +33,6 @@ def main():
             file_content_buffer = ""
             word_count = 0
             failure_count = 0
-            redirect_buffer = {}
 
             dump_created_at = run(routine["meta"]["dumped_at"], current_filepath)
 
@@ -41,24 +41,17 @@ def main():
 
             while file.readable():
 
-                if failure_count >= 10000:
+                if failure_count >= MAX_FAILURES_UNTIL_TERMINATION:
                     break
 
-                for _ in range(25):
-                    if file.readable():
-                        file_content_buffer += file.readline()
-
-                if len(file_content_buffer) % 50 != 0:
-                    file_content_buffer = ""
-                    continue
+                file_content_buffer = read_lines_into_buffer(file, file_content_buffer)
 
                 try:
                     page, start, end = run(routine["parse"]["page"], file_content_buffer)
                     failure_count = 0
                 except AttributeError:
-                    # Didn't succeed to read, let's try again with more lines in the buffer
                     failure_count += 1
-                    continue
+                    continue  # Didn't succeed to read, let's try again with more lines in the buffer
 
                 file_content_buffer = file_content_buffer[end + 1:]
 
@@ -74,17 +67,21 @@ def main():
                 page_redirect = run(routine["parse"]["page_redirect"], page[30:700])
 
                 if page_redirect is not None:
-                    redirect_buffer[page_title] = page_redirect
+                    # TODO: Figure out what to do with the redirects
                     continue
 
                 page_content = run(routine["parse"]["page_content"], page[50:])
 
-                # for section in run(routine["parse"]["sections"], page_content):
-                #     print(section)
-
                 print(page_id + " - " + page_title + " - " + str(word_count))
                 print(page_content)
-                print()
+
+
+def read_lines_into_buffer(file, file_content_buffer, number_of_lines=25):
+    """Reads lines into buffer from file and returns the new buffer"""
+    for _ in range(number_of_lines):
+        if file.readable():
+            file_content_buffer += file.readline()
+    return file_content_buffer
 
 
 if __name__ == "__main__":
