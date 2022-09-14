@@ -59,7 +59,7 @@ def _download_dump_and_decompress(link, version_control):
             progress_bar.close()
             log.error(e)
             log.error('Error while downloading file. %s will be removed as not to leave unfinished downloads.',
-                          filename)
+                      filename)
             os.remove(file_name_and_path)
             return
 
@@ -91,7 +91,7 @@ def _decompress_bz2(destination, file_name_and_path, filename, size):
         progress_bar.close()
         log.error(e)
         log.error('Error while decompressing file. %s will be removed as not to leave unfinished decompression.',
-                      filename)
+                  filename)
         os.remove(destination + filename.replace(BZ2_FILE_EXTENSION, ''))
         return
 

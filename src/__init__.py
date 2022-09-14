@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 from box import Box
 
+from src.model.Redirect import Redirect
 from src.routine import routine
 from src.utils.runners import *
 
@@ -15,6 +16,7 @@ from src.model.Word import Word
 MAX_FAILURES_UNTIL_TERMINATION = 10000
 NAMESPACE_LITERAL_FOR_WIKTIONARY_WORD_PAGE = 0
 
+redirect_pool = []
 
 def main():
     config = Box.from_yaml(filename='../config.yaml')
@@ -50,8 +52,9 @@ def main():
                     page, start, end = run(routine["parse"]["page"], file_content_buffer)
                     failure_count = 0
                 except AttributeError:
+                    # Didn't succeed to read, let's try again with more lines in the buffer
                     failure_count += 1
-                    continue  # Didn't succeed to read, let's try again with more lines in the buffer
+                    continue
 
                 file_content_buffer = file_content_buffer[end + 1:]
 
@@ -67,13 +70,13 @@ def main():
                 page_redirect = run(routine["parse"]["page_redirect"], page[30:700])
 
                 if page_redirect is not None:
-                    # TODO: Figure out what to do with the redirects
+                    redirect_pool.append(Redirect(from_word=page_title, to_word=page_redirect))
                     continue
 
                 page_content = run(routine["parse"]["page_content"], page[50:])
 
-                print(page_id + " - " + page_title + " - " + str(word_count))
-                print(page_content)
+                # print(page_id + " - " + page_title + " - " + str(word_count))
+                # print(page_content)
 
 
 def read_lines_into_buffer(file, file_content_buffer, number_of_lines=25):
@@ -82,6 +85,17 @@ def read_lines_into_buffer(file, file_content_buffer, number_of_lines=25):
         if file.readable():
             file_content_buffer += file.readline()
     return file_content_buffer
+
+
+def redirect_pool_runner():
+    """
+    Iterates over a set number of redirect_pool entries and writes them to the database
+    if the to_word is already available.
+    If the to_word is not available after the parsing is done, it deletes the entry regardless.
+    """
+    for redirect_entry in redirect_pool:
+        print(redirect_entry.from_word + "->" + redirect_entry.to_word)
+        redirect_pool.remove(redirect_entry)
 
 
 if __name__ == "__main__":

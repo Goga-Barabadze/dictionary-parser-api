@@ -26,6 +26,8 @@ languages:
     - fr
     - ru
     - it
+    - en
+    - ka
 
 links:
   wiktionary:

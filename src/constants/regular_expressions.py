@@ -6,7 +6,8 @@ All the expressions used to parse information from the wiktionary dumps
 """
 - Description
     Find the language code for a wiktionary dump file
-    They are usually written in the first line, as an attribute named xml:lang inside the mediawiki tag
+    They are usually written in the first line, as an attribute
+    named xml:lang inside the mediawiki tag
 
 - Example
     - Input
@@ -17,7 +18,7 @@ All the expressions used to parse information from the wiktionary dumps
 FIND_LANGUAGE_CODE_FOR_DUMP_REGEX = \
     (r"(?<=xml:lang=\")"
      r"[a-z-]{2,10}"     # There is a '-' in there because the language code for e.g. Aramonian 'is roa-rup'
-                         # Most languages have two character language codes, 
+                         # Most languages have two character language codes,
                          # except e.g. zh-min-nan (Min Nan) with ten chars
      r"(?=\")")
 
@@ -84,7 +85,8 @@ FIND_NAMESPACE_REGEX = \
 
 """
 - Description
-    Every page has a title. When you search in the Wiktionary search-box, this is the main text it looks up
+    Every page has a title. When you search in the Wiktionary search-box,
+    this is the main text it looks up
     
 - Example
     - Input
@@ -155,7 +157,8 @@ FIND_PAGE_REDIRECT_REGEX = \
     - Input
         <page>
             ...
-              <text bytes="510" xml:space="preserve">== Urheberrechtsverstoßes ({{Sprache|Deutsch}}) ==
+              <text bytes="510" xml:space="preserve">== Urheberrechtsverstoßes
+              ({{Sprache|Deutsch}}) ==
         === {{Wortart|Deklinierte Form|Deutsch}} ===
         ...
         {{Grundformverweis Dekl|Urheberrechtsverstoß}}</text>
@@ -173,3 +176,8 @@ FIND_PAGE_CONTENT_REGEX = \
     (r"(?<= xml:space=\"preserve\">)"
      r"[\s\S]*?"
      r"(?=</text>)")
+
+"""
+
+"""
+FIND_ALL_PAGE_SECTION = ""
