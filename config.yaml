@@ -24,10 +24,8 @@ languages:
   supported:
     - de
     - fr
-    - ru
-    - it
     - en
-    - ka
+    - ru
 
 links:
   wiktionary:

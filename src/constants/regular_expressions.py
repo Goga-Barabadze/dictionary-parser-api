@@ -178,6 +178,26 @@ FIND_PAGE_CONTENT_REGEX = \
      r"(?=</text>)")
 
 """
-
+ - Description
+    A word can can exist in multiple languages, with the same spelling.
+    A page can thereby consist of several language sections.
+    Eg. TV International, TV German, TV English.
+    
+ - Example
+    - Input
+        == TV ({{Sprache|Deutsch}}) ==
+        ...
+        == TV ({{Sprache|Englisch}}) ==
+        ...
+    - Output
+        [
+            0: == TV ({{Sprache|Deutsch}}) == ...
+            1: == TV ({{Sprache|Englisch}}) == ...
+        ]
 """
-FIND_ALL_PAGE_SECTION = ""
+FIND_ALL_PAGE_LANGUAGE_SECTIONS = \
+    (r"==[^=]+?=="  # Starting point
+     r"[\s\S]+?"  # Content of the section
+     r"(?=(?:\n==[^=]+?==)|\Z)")  # End of line or end of string
+# The ?: is needed to make the group non-consuming
+

@@ -77,3 +77,10 @@ def page_content(string):
     if len(_content) > 1:
         raise Exception("Found more than one page content where only one was expected.")
     return _content[0] if len(_content) == 1 else None
+
+
+def page_language_sections(string):
+    _sections = Regex.findall(FIND_ALL_PAGE_LANGUAGE_SECTIONS, string)
+    if len(_sections) == 0:
+        raise Exception("Found no language section.")
+    return _sections

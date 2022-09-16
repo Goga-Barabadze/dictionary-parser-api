@@ -75,8 +75,8 @@ def main():
 
                 page_content = run(routine["parse"]["page_content"], page[50:])
 
-                # print(page_id + " - " + page_title + " - " + str(word_count))
-                # print(page_content)
+                for language_section in run(routine["parse"]["page_language_sections"], page_content):
+                    print(language_section)
 
 
 def read_lines_into_buffer(file, file_content_buffer, number_of_lines=25):
@@ -91,7 +91,7 @@ def redirect_pool_runner():
     """
     Iterates over a set number of redirect_pool entries and writes them to the database
     if the to_word is already available.
-    If the to_word is not available after the parsing is done, it deletes the entry regardless.
+    If the to_word is not available after the parsing is done, it deletes the entry.
     """
     for redirect_entry in redirect_pool:
         print(redirect_entry.from_word + "->" + redirect_entry.to_word)
