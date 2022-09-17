@@ -18,4 +18,4 @@ def run_vars(path, language_code, passed_vars):
         use_langauge_code = FALLBACK_LANGUAGE_CODE
 
     predefined_vars = path[use_langauge_code]["vars"]
-    path[use_langauge_code]["func"](*predefined_vars, *passed_vars)
+    return path[use_langauge_code]["func"](*predefined_vars, *passed_vars)

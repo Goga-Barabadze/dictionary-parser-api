@@ -80,7 +80,10 @@ def page_content(string):
 
 
 def page_language_sections(string):
-    _sections = Regex.findall(FIND_ALL_PAGE_LANGUAGE_SECTIONS, string)
-    if len(_sections) == 0:
-        raise Exception("Found no language section.")
-    return _sections
+    # Don't throw exception if nothing was found, some pages don't have sections -> it's rare tho
+    return Regex.findall(FIND_ALL_PAGE_LANGUAGE_SECTIONS, string)
+
+
+def part_of_speech_sections(regex, string):
+    # Don't throw exception if nothing was found
+    return Regex.findall(regex, string)

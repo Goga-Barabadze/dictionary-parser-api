@@ -189,6 +189,7 @@ FIND_PAGE_CONTENT_REGEX = \
         ...
         == TV ({{Sprache|Englisch}}) ==
         ...
+
     - Output
         [
             0: == TV ({{Sprache|Deutsch}}) == ...
@@ -201,3 +202,48 @@ FIND_ALL_PAGE_LANGUAGE_SECTIONS = \
      r"(?=(?:\n==[^=]+?==)|\Z)")  # End of line or end of string
 # The ?: is needed to make the group non-consuming
 
+"""
+ - Description
+    A language page can be divided into multiple part of speeches.
+
+ - Example
+    - Input
+        ...
+        ===Proper noun===
+        {{en-proper noun|head=[[simplified|Simplified]] [[Chinese]]}}
+        ...
+
+    - Output
+        [
+            0: {{en-proper noun|head=[[simplified|Simplified]] [[Chinese]]}} ...
+        ]
+"""
+FIND_ALL_PART_OF_SPEECH_SECTIONS_ENGLISH = \
+    (r"={3,4}[^=]+?={3,4}\n{{[\S ]+?}}\n\n"
+     r"[\s\S]+?"
+     r"(?=(?:={3,4}[^=]+?={3,4}\n{{[\S ]+?}}\n\n)"
+     r"|\Z)")
+
+
+"""
+ - Description
+    A language page can be divided into multiple part of speeches.
+
+ - Example
+    - Input
+        ...
+        === {{Wortart|Verb|Deutsch}} ===
+        ...
+        === {{Wortart|Deklinierte Form|Deutsch}} ===
+        ...
+
+    - Output
+        [
+            0: === {{Wortart|Verb|Deutsch}} === ...
+            1: === {{Wortart|Deklinierte Form|Deutsch}} ===
+        ]
+"""
+FIND_ALL_PART_OF_SPEECH_SECTIONS_GERMAN = \
+    (r"={3} {{Wortart"
+     r"[\s\S]+?"
+     r"(?=(?:={3} {{Wortart)|\Z)")

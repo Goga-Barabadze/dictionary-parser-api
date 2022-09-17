@@ -9,7 +9,7 @@ from box import Box
 
 from src.model.Redirect import Redirect
 from src.routine import routine
-from src.utils.runners import *
+from src.utils.runners import run, run_vars
 
 from src.model.Word import Word
 
@@ -75,8 +75,17 @@ def main():
 
                 page_content = run(routine["parse"]["page_content"], page[50:])
 
-                for language_section in run(routine["parse"]["page_language_sections"], page_content):
-                    print(language_section)
+                language_sections = run(routine["parse"]["page_language_sections"], page_content)
+                if language_sections is None:
+                    continue
+
+                for language_section in language_sections:
+                    part_of_speech_sections = run_vars(routine["parse"]["part_of_speech_sections"], dump_file_language_code, [language_section])
+                    if part_of_speech_sections is None:
+                        continue
+
+                    for part_of_speech_section in part_of_speech_sections:
+                        print(part_of_speech_section)
 
 
 def read_lines_into_buffer(file, file_content_buffer, number_of_lines=25):
